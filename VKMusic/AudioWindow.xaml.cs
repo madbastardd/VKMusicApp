@@ -23,7 +23,7 @@ namespace VKMusic {
         private uint? showFrom = 0;
         public AudioWindow(VKConnector connector) {
             InitializeComponent();
-            Style = (Style)FindResource(typeof(Window));
+            //Style = (Style)FindResource(typeof(Window));
 
             this.connector = connector;
 

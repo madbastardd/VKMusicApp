@@ -23,3 +23,7 @@ c:\users\мисик\documents\visual studio 2015\Projects\VKMusic\VKMusic\bin\De
 c:\users\мисик\documents\visual studio 2015\Projects\VKMusic\VKMusic\bin\Debug\VkNet.xml
 c:\users\мисик\documents\visual studio 2015\Projects\VKMusic\VKMusic\obj\Debug\AudioWindow.g.cs
 c:\users\мисик\documents\visual studio 2015\Projects\VKMusic\VKMusic\obj\Debug\AudioWindow.baml
+C:\Users\Мисик\Documents\Visual Studio 2015\Projects\VKMusic\VKMusic\bin\Debug\MahApps.Metro.dll
+C:\Users\Мисик\Documents\Visual Studio 2015\Projects\VKMusic\VKMusic\bin\Debug\System.Windows.Interactivity.dll
+C:\Users\Мисик\Documents\Visual Studio 2015\Projects\VKMusic\VKMusic\bin\Debug\MahApps.Metro.pdb
+C:\Users\Мисик\Documents\Visual Studio 2015\Projects\VKMusic\VKMusic\bin\Debug\MahApps.Metro.xml

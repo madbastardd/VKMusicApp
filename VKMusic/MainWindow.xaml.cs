@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MahApps.Metro.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,25 +21,39 @@ namespace VKMusic {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : Window {
+    public partial class MainWindow : MetroWindow {
         VKConnector connector = null;
         public MainWindow() {
             InitializeComponent();
-            Style = (Style)FindResource(typeof(Window));
+            //Style = (Style)FindResource(typeof(Window));
+
+            //LinearGradientBrush linearBrush = new LinearGradientBrush();
+            //linearBrush.StartPoint = new Point(0.5, 0);
+            //linearBrush.EndPoint = new Point(0.5, 1);
+            //linearBrush.GradientStops.Add(new GradientStop(Color.FromRgb(255, 239, 140), 0));
+            //linearBrush.GradientStops.Add(new GradientStop(Colors.White, 1));
 
             username.GotFocus += (object sender, RoutedEventArgs e) => {
                 username.Text = "";
                 username.Foreground = Brushes.Black;
+                //usernameBorder.Background = linearBrush;
+                usernameBorder.Background = Brushes.White;
             };
             username.LostFocus += (object sender, RoutedEventArgs e) => {
                 if (string.IsNullOrEmpty(username.Text)) {
                     username.Text = "Username";
                     username.Foreground = Brushes.Gray;
                 }
+                usernameBorder.Background = new SolidColorBrush(Color.FromArgb(75, 255, 255, 255));
             };
 
             password.GotFocus += (object sender, RoutedEventArgs e) => {
                 password.Password = "";
+                //passwordBorder.Background = linearBrush;
+                passwordBorder.Background = Brushes.White;
+            };
+            password.LostFocus += (object sender, RoutedEventArgs e) => {
+                passwordBorder.Background = new SolidColorBrush(Color.FromArgb(75, 255, 255, 255));
             };
 
             username.Foreground = Brushes.Gray;
