@@ -11,8 +11,8 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Colors.xaml" />
                 <!-- Accent and AppTheme setting -->
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
-                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+                <!--<ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />-->
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Cobalt.xaml" />
             </ResourceDictionary.MergedDictionaries>
             <Style TargetType="{x:Type Control}" x:Key="baseStyle">
                 <Setter Property="FontFamily" Value="Cambria" />
@@ -23,8 +23,10 @@
                 <Setter Property="FontFamily" Value="Cambria" />
                 <Setter Property="FontSize" Value="20" />
             </Style>
-            
-            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource baseStyle}" />
+
+            <Style TargetType="{x:Type Button}" BasedOn="{StaticResource baseStyle}">
+                <Setter Property="Cursor" Value="Hand" />
+            </Style>
             <!--<Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource baseStyle}" />-->
             <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource baseStyle}" />
         </ResourceDictionary>

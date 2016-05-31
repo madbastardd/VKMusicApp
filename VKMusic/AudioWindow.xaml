@@ -10,7 +10,35 @@
     <Grid>
         <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
             <StackPanel Name="mainPanel" VerticalAlignment="Top" Margin="10">
-                
+                <Grid Name="basic" Height="30">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="*" />
+                        <ColumnDefinition Width="7*" />
+                    </Grid.ColumnDefinitions>
+
+                    <Button Grid.Column="0" Name="buttonPlay" Width="30" >
+                        <Button.Template>
+                            <ControlTemplate>
+                                <Border CornerRadius="15" Background="White">
+                                    <Image Source="play.png" Stretch="Fill" />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <Button Grid.Column="1" Name="buttonStop" Width="30" >
+                        <Button.Template>
+                            <ControlTemplate>
+                                <Border CornerRadius="15" Background="White">
+                                    <Image Source="stop.png" Stretch="Fill" />
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <TextBox Grid.Column="2" Text="Shit" />
+                </Grid>
             </StackPanel>
         </ScrollViewer>
 

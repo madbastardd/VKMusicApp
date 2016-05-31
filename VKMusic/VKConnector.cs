@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 using VkNet;
 using VkNet.Enums.Filters;
 using VkNet.Exception;
@@ -39,18 +34,7 @@ namespace VKMusic {
                 Settings = Settings.Audio,
             };
 
-            try {
-                Authorization(authParams);
-
-                window.errorMessage.Dispatcher.Invoke(() => window.errorMessage.Text = "ALL OK");
-
-                HideInfo();
-
-                return true;
-            }
-            catch (Exception e) when (e is VkApiException || e is VkApiAuthorizationException) {
-                return false;
-            }
+            return Auth(authParams);
         }
 
         public bool TwoAuth() {
@@ -62,6 +46,10 @@ namespace VKMusic {
                 TwoFactorAuthorization = () => KeyValue
             };
 
+            return Auth(authParams);
+        }
+
+        private bool Auth(ApiAuthParams authParams) {
             try {
                 Authorization(authParams);
 

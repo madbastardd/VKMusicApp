@@ -1,23 +1,10 @@
 ﻿using MahApps.Metro.Controls;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
-using VkNet;
-using VkNet.Enums.Filters;
-using VkNet.Exception;
 
 namespace VKMusic {
     /// <summary>
@@ -37,7 +24,7 @@ namespace VKMusic {
             username.LostFocus += (object sender, RoutedEventArgs e) => {
                 if (string.IsNullOrEmpty(username.Text)) {
                     username.Text = "Username";
-                    username.Foreground = Brushes.Gray;
+                    username.Foreground = new SolidColorBrush(Color.FromRgb(55, 55, 55));
                 }
                 usernameBorder.Background = new SolidColorBrush(Color.FromArgb(75, 255, 255, 255));
             };
@@ -50,12 +37,15 @@ namespace VKMusic {
                 passwordBorder.Background = new SolidColorBrush(Color.FromArgb(75, 255, 255, 255));
             };
 
-            username.Foreground = Brushes.Gray;
+            username.Foreground = new SolidColorBrush(Color.FromRgb(55, 55, 55));
         }
 
         private void submit_Click(object sender, RoutedEventArgs e) {
             connector = new VKConnector(this, username.Text, password.Password);
             username.Text = password.Password = "";
+
+            username.Foreground = new SolidColorBrush(Color.FromRgb(55, 55, 55));
+            username.Text = "Username";
 
             wallIMG.Visibility = Visibility.Hidden;
             loadAnimation();
@@ -92,7 +82,7 @@ namespace VKMusic {
             int angle = 360;
             loadTimer = new DispatcherTimer();
             loadTimer.Tick += (object o, EventArgs ev) => {
-                load.RenderTransform = new RotateTransform(angle -= 5);
+                load.RenderTransform = new RotateTransform(angle -= 10);
                 if (angle < 0)
                     angle += 360;
             };
@@ -116,7 +106,7 @@ namespace VKMusic {
                     mainAuth.Dispatcher.Invoke(() => mainAuth.Visibility = Visibility.Visible);
                     secondAuth.Dispatcher.Invoke(() => secondAuth.Visibility = Visibility.Hidden);
 
-                    errorMessage.Text = "Incorrect SMS key";
+                    errorMessage.Dispatcher.Invoke(() => errorMessage.Text = "Incorrect SMS key");
                 }
                 else {
                     loadTimer?.Stop();
@@ -139,6 +129,24 @@ namespace VKMusic {
             mainAuth.Visibility = Visibility.Visible;
 
             connector = null;
+        }
+
+        private void username_textChanged(object sender, TextChangedEventArgs e) {
+            if (logInBtn != null)
+                logInBtn.Visibility = (!string.IsNullOrEmpty(username.Text) 
+                    && !string.IsNullOrEmpty(password.Password)
+                    && username.Text != "Username")
+                    ? Visibility.Visible
+                    : Visibility.Hidden;
+        }
+
+        private void password_PasswordChanged(object sender, RoutedEventArgs e) {
+            if (logInBtn != null)
+                logInBtn.Visibility = (!string.IsNullOrEmpty(username.Text) 
+                    && !string.IsNullOrEmpty(password.Password)
+                    && username.Text != "Username")
+                    ? Visibility.Visible
+                    : Visibility.Hidden;
         }
     }
 }

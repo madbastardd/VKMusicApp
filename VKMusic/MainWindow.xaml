@@ -7,16 +7,16 @@
         xmlns:local="clr-namespace:VKMusic"
         mc:Ignorable="d"
         Title="" Height="350" Width="525">
-    <Grid>
+    <Grid Background="#FF25B7D3">
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
         <Grid Grid.Row="0" Name="wallIMG">
-            <Image Source="wall.png" Margin="15" />
+            <Image Source="wall4.png" Margin="15" />
         </Grid>
 
-        <Grid Name="mainAuth" Grid.Row="0" Background="#30000000">
+        <Grid Name="mainAuth" Grid.Row="0" Background="#80000000">
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*" />
                 <RowDefinition Height="50" />
@@ -35,7 +35,8 @@
                 </Grid.ColumnDefinitions>
                 <Border Name="usernameBorder" BorderThickness="1" Grid.Column="1" CornerRadius="10" BorderBrush="Black"
                         Background="#BFFFFFFF">
-                    <TextBox Name="username" BorderThickness="0" Text="Username" Padding="5">
+                    <TextBox Name="username" BorderThickness="0" Text="Username" Padding="5"
+                             TextChanged="username_textChanged">
                         <TextBox.Background>
                             <SolidColorBrush />
                         </TextBox.Background>
@@ -51,7 +52,8 @@
                 </Grid.ColumnDefinitions>
                 <Border Name="passwordBorder" BorderThickness="1" Grid.Column="1" CornerRadius="10" BorderBrush="Black" 
                         Background="#BFFFFFFF">
-                    <PasswordBox Name="password" BorderThickness="0" Padding="5" >
+                    <PasswordBox Name="password" BorderThickness="0" Padding="5" 
+                                 PasswordChanged="password_PasswordChanged">
                         <PasswordBox.Background>
                             <SolidColorBrush />
                         </PasswordBox.Background>
@@ -65,7 +67,7 @@
                     <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
                 
-                <Button Name="submit" Grid.Column="1" Click="submit_Click">
+                <Button Name="logInBtn" Grid.Column="1" Click="submit_Click" Visibility="Hidden">
                     <Button.Template>
                         <ControlTemplate>
                             <Border CornerRadius="10" Background="#BF000000" Margin="10, 0, 10, 0">
@@ -80,7 +82,7 @@
             </Grid>
         </Grid>
 
-        <Grid Name="secondAuth" Grid.Row="0" Background="#30000000" Visibility="Hidden">
+        <Grid Name="secondAuth" Grid.Row="0" Background="#80000000" Visibility="Hidden">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*" />
@@ -102,10 +104,10 @@
                     </TextBox>
                 </Border>
                 <!--<Button Name="successAuth" Click="successAuth_Click" Grid.Row="2" Margin="10" Content="Submit" />-->
-                <Button Name="successAuth" Click="successAuth_Click" Margin="10" Grid.Row="2" >
+                <Button Name="submit" Click="successAuth_Click" Margin="10" Grid.Row="2" >
                     <Button.Template>
                         <ControlTemplate>
-                            <Border CornerRadius="10" Background="#BF000000" Margin="10, 0, 10, 0">
+                            <Border CornerRadius="10" Background="#BF000000" Margin="40, 0, 40, 0">
                                 <TextBlock Text="Submit" Foreground="White" 
                                        HorizontalAlignment="Center"                                           
                                        Margin="0,5,0,5" />
@@ -117,7 +119,7 @@
                 <Button Name="back" Click="back_Click" Grid.Row="3" Margin="10" >
                     <Button.Template>
                         <ControlTemplate>
-                            <Border CornerRadius="10" Background="#BF000000" Margin="10, 0, 10, 0">
+                            <Border CornerRadius="10" Background="#BF000000" Margin="40, 0, 40, 0">
                                 <TextBlock Text="Back" Foreground="White" 
                                        HorizontalAlignment="Center"                                           
                                        Margin="0,5,0,5" />
