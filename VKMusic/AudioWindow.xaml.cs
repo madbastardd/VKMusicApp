@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MahApps.Metro.Controls;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -18,7 +19,7 @@ namespace VKMusic {
     /// <summary>
     /// Interaction logic for AudioWindow.xaml
     /// </summary>
-    public partial class AudioWindow : Window {
+    public partial class AudioWindow : MetroWindow {
         private VKConnector connector  { get; set; }
         private uint? showFrom = 0;
         public AudioWindow(VKConnector connector) {

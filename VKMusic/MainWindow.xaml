@@ -12,11 +12,11 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
-            <Image Source="wall.png" />
+        <Grid Grid.Row="0" Name="wallIMG">
+            <Image Source="wall.png" Margin="15" />
         </Grid>
 
-        <Grid Name="mainAuth" Grid.Row="0">
+        <Grid Name="mainAuth" Grid.Row="0" Background="#30000000">
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*" />
                 <RowDefinition Height="50" />
@@ -29,9 +29,9 @@
             </Grid>
             <Grid Grid.Row="1" Margin="0 0 0 10">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Border Name="usernameBorder" BorderThickness="1" Grid.Column="1" CornerRadius="10" BorderBrush="Black"
                         Background="#BFFFFFFF">
@@ -45,9 +45,9 @@
             </Grid>
             <Grid Grid.Row="2" Margin="0 0 0 10">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
-                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Border Name="passwordBorder" BorderThickness="1" Grid.Column="1" CornerRadius="10" BorderBrush="Black" 
                         Background="#BFFFFFFF">
@@ -64,7 +64,7 @@
                     <ColumnDefinition Width="2*" />
                     <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
-                <!--<Border BorderThickness="1" Grid.Column="1" CornerRadius="10" BorderBrush="Black" Background="#BF000000">-->
+                
                 <Button Name="submit" Grid.Column="1" Click="submit_Click">
                     <Button.Template>
                         <ControlTemplate>
@@ -76,25 +76,65 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-                <!--</Border>-->
+                
             </Grid>
         </Grid>
 
-        <Grid Name="secondAuth" Grid.Row="0" Visibility="Hidden">
+        <Grid Name="secondAuth" Grid.Row="0" Background="#30000000" Visibility="Hidden">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="50" />
+                    <RowDefinition Height="50" />
                     <RowDefinition Height="2*" />
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" TextAlignment="Center" VerticalAlignment="Center" Text="Enter SMS key" />
-                <TextBox Name="keyAuth" Grid.Row="1" Margin="10" TextAlignment="Center" />
-                <Button Name="successAuth" Click="successAuth_Click" Grid.Row="2" Margin="10" Content="Submit" />
-                <Button Name="back" Click="back_Click" Grid.Row="3" Margin="10" Content="Back" />
+                <TextBlock Grid.Row="0" TextAlignment="Center" VerticalAlignment="Center" Text="Enter SMS key" 
+                           Foreground="White" />
+                
+                <Border Grid.Row="1" BorderThickness="1" Grid.Column="1" CornerRadius="10" BorderBrush="Black" 
+                        Background="#BFFFFFFF" Margin="5 0 5 10">
+                    <TextBox Name="keyAuth" TextAlignment="Center" BorderThickness="0" Padding="5">
+                        <TextBox.Background>
+                            <SolidColorBrush />
+                        </TextBox.Background>
+                    </TextBox>
+                </Border>
+                <!--<Button Name="successAuth" Click="successAuth_Click" Grid.Row="2" Margin="10" Content="Submit" />-->
+                <Button Name="successAuth" Click="successAuth_Click" Margin="10" Grid.Row="2" >
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border CornerRadius="10" Background="#BF000000" Margin="10, 0, 10, 0">
+                                <TextBlock Text="Submit" Foreground="White" 
+                                       HorizontalAlignment="Center"                                           
+                                       Margin="0,5,0,5" />
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Button Name="back" Click="back_Click" Grid.Row="3" Margin="10" >
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border CornerRadius="10" Background="#BF000000" Margin="10, 0, 10, 0">
+                                <TextBlock Text="Back" Foreground="White" 
+                                       HorizontalAlignment="Center"                                           
+                                       Margin="0,5,0,5" />
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
             </Grid>
         </Grid>
+
+        <Grid Grid.Row="0" Visibility="Hidden" Name="loadIMG" Background="White">
+            <Image Name="load" Source="wait.png" Margin="50" RenderTransformOrigin="0.5,0.5">
+                <Image.RenderTransform>
+                    <RotateTransform Angle="0" />
+                </Image.RenderTransform>
+            </Image>
+        </Grid>
+        
     </Grid>
 </Controls:MetroWindow>

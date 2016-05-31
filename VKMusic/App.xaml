@@ -19,6 +19,11 @@
                 <Setter Property="FontSize" Value="20" />
             </Style>
 
+            <Style TargetType="{x:Type TextBlock}">
+                <Setter Property="FontFamily" Value="Cambria" />
+                <Setter Property="FontSize" Value="20" />
+            </Style>
+            
             <Style TargetType="{x:Type Button}" BasedOn="{StaticResource baseStyle}" />
             <!--<Style TargetType="{x:Type TextBlock}" BasedOn="{StaticResource baseStyle}" />-->
             <Style TargetType="{x:Type TextBox}" BasedOn="{StaticResource baseStyle}" />

@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,6 +14,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 using VkNet;
 using VkNet.Enums.Filters;
 using VkNet.Exception;
@@ -23,20 +25,13 @@ namespace VKMusic {
     /// </summary>
     public partial class MainWindow : MetroWindow {
         VKConnector connector = null;
+        DispatcherTimer loadTimer;
         public MainWindow() {
             InitializeComponent();
-            //Style = (Style)FindResource(typeof(Window));
-
-            //LinearGradientBrush linearBrush = new LinearGradientBrush();
-            //linearBrush.StartPoint = new Point(0.5, 0);
-            //linearBrush.EndPoint = new Point(0.5, 1);
-            //linearBrush.GradientStops.Add(new GradientStop(Color.FromRgb(255, 239, 140), 0));
-            //linearBrush.GradientStops.Add(new GradientStop(Colors.White, 1));
 
             username.GotFocus += (object sender, RoutedEventArgs e) => {
                 username.Text = "";
                 username.Foreground = Brushes.Black;
-                //usernameBorder.Background = linearBrush;
                 usernameBorder.Background = Brushes.White;
             };
             username.LostFocus += (object sender, RoutedEventArgs e) => {
@@ -49,7 +44,6 @@ namespace VKMusic {
 
             password.GotFocus += (object sender, RoutedEventArgs e) => {
                 password.Password = "";
-                //passwordBorder.Background = linearBrush;
                 passwordBorder.Background = Brushes.White;
             };
             password.LostFocus += (object sender, RoutedEventArgs e) => {
@@ -57,42 +51,87 @@ namespace VKMusic {
             };
 
             username.Foreground = Brushes.Gray;
-
-            //AudioWindow audioWindow = new AudioWindow();
-
-            //audioWindow.Show();
         }
 
         private void submit_Click(object sender, RoutedEventArgs e) {
             connector = new VKConnector(this, username.Text, password.Password);
-
             username.Text = password.Password = "";
 
-            if (!connector.OneAuth()) {
-                mainAuth.Visibility = Visibility.Hidden;
-                secondAuth.Visibility = Visibility.Visible;
-            } else {
-                AudioWindow audioWindow = new AudioWindow(connector);
-                audioWindow.Show();
+            wallIMG.Visibility = Visibility.Hidden;
+            loadAnimation();
 
-                Close();
-            }
+            Thread tempThread = new Thread(() => {
+                if (!connector.OneAuth()) {
+                    loadTimer?.Stop();
+
+                    wallIMG.Dispatcher.Invoke(() => wallIMG.Visibility = Visibility.Visible);
+                    loadIMG.Dispatcher.Invoke(() => loadIMG.Visibility = Visibility.Hidden);
+
+                    mainAuth.Dispatcher.Invoke(() => mainAuth.Visibility = Visibility.Hidden);
+                    secondAuth.Dispatcher.Invoke(() => secondAuth.Visibility = Visibility.Visible);
+                }
+                else {
+                    loadTimer?.Stop();
+
+                    Dispatcher.Invoke(() => {
+                        AudioWindow audioWindow = new AudioWindow(connector);
+                        audioWindow.Show();
+
+                        Close();
+                    });
+                }
+            });
+
+            tempThread.SetApartmentState(ApartmentState.STA);
+            tempThread.Start();
+        }
+
+        private void loadAnimation() {
+            loadIMG.Visibility = Visibility.Visible;
+
+            int angle = 360;
+            loadTimer = new DispatcherTimer();
+            loadTimer.Tick += (object o, EventArgs ev) => {
+                load.RenderTransform = new RotateTransform(angle -= 5);
+                if (angle < 0)
+                    angle += 360;
+            };
+            loadTimer.Interval = new TimeSpan(0, 0, 0, 0, 35);
+            loadTimer.Start();
         }
 
         private void successAuth_Click(object sender, RoutedEventArgs e) {
             connector.KeyValue = keyAuth.Text;
 
-            if (!connector.TwoAuth()) {
-                mainAuth.Visibility = Visibility.Visible;
-                secondAuth.Visibility = Visibility.Hidden;
+            wallIMG.Visibility = Visibility.Hidden;
+            loadAnimation();
 
-                errorMessage.Text = "Incorrect SMS key";
-            } else {
-                AudioWindow audioWindow = new AudioWindow(connector);
-                audioWindow.Show();
+            Thread tempThread = new Thread(() => {
+                if (!connector.TwoAuth()) {
+                    loadTimer?.Stop();
 
-                Close();
-            }
+                    wallIMG.Dispatcher.Invoke(() => wallIMG.Visibility = Visibility.Visible);
+                    loadIMG.Dispatcher.Invoke(() => loadIMG.Visibility = Visibility.Hidden);
+
+                    mainAuth.Dispatcher.Invoke(() => mainAuth.Visibility = Visibility.Visible);
+                    secondAuth.Dispatcher.Invoke(() => secondAuth.Visibility = Visibility.Hidden);
+
+                    errorMessage.Text = "Incorrect SMS key";
+                }
+                else {
+                    loadTimer?.Stop();
+
+                    Dispatcher.Invoke(() => {
+                        AudioWindow audioWindow = new AudioWindow(connector);
+                        audioWindow.Show();
+
+                        Close();
+                    });
+                }
+            });
+
+            tempThread.SetApartmentState(ApartmentState.STA);
+            tempThread.Start();
         }
 
         private void back_Click(object sender, RoutedEventArgs e) {
