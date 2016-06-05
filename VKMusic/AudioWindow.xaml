@@ -8,39 +8,74 @@
         mc:Ignorable="d"
         Title="AudioWindow" Height="500" Width="800">
     <Grid>
-        <ScrollViewer HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
-            <StackPanel Name="mainPanel" VerticalAlignment="Top" Margin="10">
-                <Grid Name="basic" Height="30">
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="*" />
-                        <ColumnDefinition Width="7*" />
-                    </Grid.ColumnDefinitions>
+        <Grid>
+            <Image Source="wall2.png" />
+        </Grid>
 
-                    <Button Grid.Column="0" Name="buttonPlay" Width="30" >
-                        <Button.Template>
-                            <ControlTemplate>
-                                <Border CornerRadius="15" Background="White">
-                                    <Image Source="play.png" Stretch="Fill" />
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
+        <Grid Background="#40000000">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="10*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            
+            <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+                <StackPanel Name="mainPanel" VerticalAlignment="Top" Margin="10">
+                    <Grid Name="basic" Height="30">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="10*" />
+                        </Grid.ColumnDefinitions>
 
-                    <Button Grid.Column="1" Name="buttonStop" Width="30" >
-                        <Button.Template>
-                            <ControlTemplate>
-                                <Border CornerRadius="15" Background="White">
-                                    <Image Source="stop.png" Stretch="Fill" />
-                                </Border>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
+                        <Button Grid.Column="0" Width="30" >
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <Border CornerRadius="15" Background="White">
+                                        <Image Source="play.png" Stretch="Fill" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
 
-                    <TextBox Grid.Column="2" Text="Shit" />
-                </Grid>
-            </StackPanel>
-        </ScrollViewer>
+                        <Button Grid.Column="1" Width="30" >
+                            <Button.Template>
+                                <ControlTemplate>
+                                    <Border CornerRadius="15" Background="White">
+                                        <Image Source="stop.png" Stretch="Fill" />
+                                    </Border>
+                                </ControlTemplate>
+                            </Button.Template>
+                        </Button>
 
+                        <TextBlock Grid.Column="2" Text="Song name with perfomer" />
+                    </Grid>
+                </StackPanel>
+            </ScrollViewer>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="2*" />
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="1">
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border CornerRadius="15" Background="#BF000000">
+                                <TextBlock Text="Load more" Foreground="White" 
+                                       HorizontalAlignment="Center"                                           
+                                       Margin="0,5,0,5" />
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+            </Grid>
+
+
+            <Grid Grid.Row="2" Visibility="Hidden">
+
+            </Grid>
+        </Grid>
     </Grid>
 </Controls:MetroWindow>

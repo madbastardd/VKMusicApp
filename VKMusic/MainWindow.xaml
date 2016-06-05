@@ -7,16 +7,12 @@
         xmlns:local="clr-namespace:VKMusic"
         mc:Ignorable="d"
         Title="" Height="350" Width="525">
-    <Grid Background="#FF25B7D3">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
-
-        <Grid Grid.Row="0" Name="wallIMG">
-            <Image Source="wall4.png" Margin="15" />
+    <Grid>
+        <Grid Name="wallIMG" Background="#FF25B7D3">
+            <Image Source="wall.png" />
         </Grid>
 
-        <Grid Name="mainAuth" Grid.Row="0" Background="#80000000">
+        <Grid Name="mainAuth" Background="#80000000">
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*" />
                 <RowDefinition Height="50" />
@@ -82,7 +78,7 @@
             </Grid>
         </Grid>
 
-        <Grid Name="secondAuth" Grid.Row="0" Background="#80000000" Visibility="Hidden">
+        <Grid Name="secondAuth" Background="#80000000" Visibility="Hidden">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*" />
@@ -130,7 +126,7 @@
             </Grid>
         </Grid>
 
-        <Grid Grid.Row="0" Visibility="Hidden" Name="loadIMG" Background="White">
+        <Grid Visibility="Hidden" Name="loadIMG" Background="White">
             <Image Name="load" Source="wait.png" Margin="50" RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
                     <RotateTransform Angle="0" />

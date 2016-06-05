@@ -5,28 +5,29 @@ using VkNet.Exception;
 
 namespace VKMusic {
     public class VKConnector {
-        static ulong ID = 5485784;
-        VkApi api;
+        static ulong                    ID = 5485784;   //application ID
+        VkApi                           api;            //VKApi
 
-        MainWindow window;
-        string username;
-        string password;
-        public string KeyValue  { get; set; }
+        string                          username;       //username
+        string                          password;       //password
+        public string KeyValue  { get; set; }           //key from SMS
 
         public VkApi VK {
+            //read only property that returns VKApi
             get {
                 return api;
             }
         }
-        public VKConnector(MainWindow window, string username, string password) {
+        public VKConnector(string username, string password) {
+            //constrcutor
             api = new VkApi();
 
             this.username = username;
             this.password = password;
-            this.window = window;
         }
 
         public bool OneAuth() {
+            //auth without SMS
             ApiAuthParams authParams = new ApiAuthParams {
                 ApplicationId = ID,
                 Login = username,
@@ -38,6 +39,7 @@ namespace VKMusic {
         }
 
         public bool TwoAuth() {
+            //auth with SMS
             ApiAuthParams authParams = new ApiAuthParams {
                 ApplicationId = ID,
                 Login = username,
@@ -50,10 +52,11 @@ namespace VKMusic {
         }
 
         private bool Auth(ApiAuthParams authParams) {
+            //try auth
+            //if all OK - return true
+            //else - false
             try {
                 Authorization(authParams);
-
-                window.errorMessage.Dispatcher.Invoke(() => window.errorMessage.Text = "ALL OK");
 
                 HideInfo();
 
@@ -65,11 +68,13 @@ namespace VKMusic {
         }
 
         private void Authorization(ApiAuthParams param) {
+            //auth with parameters
             api.Authorize(param);
         }
 
         private void HideInfo() {
-            window = null;
+            //delete username and password after
+            //success auth
             username = password = null;
         }
     }
