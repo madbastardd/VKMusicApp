@@ -8,27 +8,27 @@
         mc:Ignorable="d"
         Title="AudioWindow" Height="500" Width="800">
     <Grid>
-        <Grid>
+        <Grid Background="#FF31A3D4">
             <Image Source="wall2.png" />
         </Grid>
 
-        <Grid Background="#40000000">
+        <Grid Background="#80000000">
             <Grid.RowDefinitions>
                 <RowDefinition Height="10*" />
-                <RowDefinition Height="*" />
+                <RowDefinition Height="50" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             
             <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                 <StackPanel Name="mainPanel" VerticalAlignment="Top" Margin="10">
-                    <Grid Name="basic" Height="30">
+                    <Grid Name="basic" Height="30" Margin="0 0 0 10">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="*" />
                             <ColumnDefinition Width="10*" />
                         </Grid.ColumnDefinitions>
 
-                        <Button Grid.Column="0" Width="30" >
+                        <Button Name="playSong" Grid.Column="0" Width="30" Click="playSong_Click" >
                             <Button.Template>
                                 <ControlTemplate>
                                     <Border CornerRadius="15" Background="White">
@@ -48,7 +48,7 @@
                             </Button.Template>
                         </Button>
 
-                        <TextBlock Grid.Column="2" Text="Song name with perfomer" />
+                        <TextBlock Grid.Column="2" Text="Song" Foreground="White" />
                     </Grid>
                 </StackPanel>
             </ScrollViewer>
@@ -59,13 +59,14 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
-                <Button Grid.Column="1">
+                
+                <Button Name="loadMore" Grid.Column="1" Margin="0 5 0 5" Click="Button_Click">
                     <Button.Template>
                         <ControlTemplate>
                             <Border CornerRadius="15" Background="#BF000000">
                                 <TextBlock Text="Load more" Foreground="White" 
-                                       HorizontalAlignment="Center"                                           
-                                       Margin="0,5,0,5" />
+                                       HorizontalAlignment="Center"
+                                       VerticalAlignment="Center" />
                             </Border>
                         </ControlTemplate>
                     </Button.Template>

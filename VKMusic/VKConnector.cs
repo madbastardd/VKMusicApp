@@ -10,7 +10,7 @@ namespace VKMusic {
 
         string                          username;       //username
         string                          password;       //password
-        public string KeyValue  { get; set; }           //key from SMS
+        public string                   KeyValue  { get; set; }           //key from SMS
 
         public VkApi VK {
             //read only property that returns VKApi
