@@ -27,3 +27,5 @@ C:\Users\Мисик\Documents\Visual Studio 2015\Projects\VKMusic\VKMusic\bin\De
 C:\Users\Мисик\Documents\Visual Studio 2015\Projects\VKMusic\VKMusic\bin\Debug\System.Windows.Interactivity.dll
 C:\Users\Мисик\Documents\Visual Studio 2015\Projects\VKMusic\VKMusic\bin\Debug\MahApps.Metro.pdb
 C:\Users\Мисик\Documents\Visual Studio 2015\Projects\VKMusic\VKMusic\bin\Debug\MahApps.Metro.xml
+C:\Users\Мисик\documents\visual studio 2015\Projects\VKMusic\VKMusic\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll
+C:\Users\Мисик\documents\visual studio 2015\Projects\VKMusic\VKMusic\bin\Debug\Microsoft.VisualStudio.QualityTools.UnitTestFramework.xml

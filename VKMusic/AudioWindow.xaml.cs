@@ -1,4 +1,6 @@
 ﻿using MahApps.Metro.Controls;
+using System;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Controls;
 using System.Windows.Markup;
@@ -11,7 +13,7 @@ namespace VKMusic {
     /// </summary>
     public partial class AudioWindow : MetroWindow {
         VKConnector                 connector  { get; set; }
-        uint?                       showFrom = 0;
+        uint?                       currentSong = 1;
         Grid                        copyBasic;
         public AudioWindow(VKConnector connector) {
             //init UI elements
@@ -34,10 +36,10 @@ namespace VKMusic {
             User user;
 
 #pragma warning disable CS0618 // Type or member is obsolete
-            var audios = connector.VK.Audio.Get((long)connector.VK.UserId, out user, null, null, 21, showFrom + 1);
+            var audios = connector.VK.Audio.Get((long)connector.VK.UserId, out user, null, null, 21, currentSong);
 #pragma warning restore CS0618 // Type or member is obsolete
 
-            for (int i = 0; i < 20; i++) {
+            foreach (var audio in audios) {
                 //AddChild songs
                 //copy XAML of basic grid
                 string gridXaml = XamlWriter.Save(copyBasic);
@@ -52,14 +54,19 @@ namespace VKMusic {
                 foreach (var item in newGrid.GetChildObjects()) {
                     if ((item as TextBlock)?.Text == "Song")
                         //songName field
-                        (item as TextBlock).Text = audios[i].Artist + " - " 
-                            + audios[i].Title;
+                        (item as TextBlock).Text = audio.Artist + " - " 
+                            + audio.Title;
                     else if ((item as System.Windows.Controls.Button)?.Name == "playSong") {
                         //play button field
                         var btn = item as System.Windows.Controls.Button;
 
                         //set another button name
-                        btn.Name += showFrom + i;
+                        btn.Name += currentSong;
+
+                        //link download URL with button
+                        btn.Tag = audio.Url;
+
+                        Console.WriteLine(currentSong + " - " + btn.Name);
 
                         //add click event handler
                         btn.Click += playSong_Click;
@@ -68,16 +75,18 @@ namespace VKMusic {
 
                 //add new children
                 mainPanel.Children.Add(newGrid);
+                //increment currentSong
+                ++currentSong;
             }
-
-            //increment showFrom
-            showFrom += 21;
         }
 
         private void playSong_Click(object sender, System.Windows.RoutedEventArgs e) {
+            //get Button that was clicked
             var btn = sender as System.Windows.Controls.Button;
 
-            
+            media.Source = btn.Tag as Uri;
+
+            media.Play();
         }
     }
 }
