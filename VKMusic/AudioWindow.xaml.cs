@@ -2,6 +2,7 @@
 using System;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Net;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Xml;
@@ -26,13 +27,13 @@ namespace VKMusic {
             this.connector = connector;
 
             //load first songs
-            Button_Click(loadMore, null);
+            loadMore_Click(loadMore, null);
 
             //remove basic audio grid
             mainPanel.Children.Remove(basic);
         }
 
-        private void Button_Click(object sender, System.Windows.RoutedEventArgs e) {
+        private void loadMore_Click(object sender, System.Windows.RoutedEventArgs e) {
             User user;
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -56,8 +57,10 @@ namespace VKMusic {
                         //songName field
                         (item as TextBlock).Text = audio.Artist + " - " 
                             + audio.Title;
-                    else if ((item as System.Windows.Controls.Button)?.Name == "playSong") {
-                        //play button field
+                    else if ((item as System.Windows.Controls.Button)?.Name == "playSong" ||
+                        (item as System.Windows.Controls.Button)?.Name == "downloadSong") {
+                        //play button or download button
+                        //get this button
                         var btn = item as System.Windows.Controls.Button;
 
                         //set another button name
@@ -66,11 +69,13 @@ namespace VKMusic {
                         //link download URL with button
                         btn.Tag = audio.Url;
 
-                        Console.WriteLine(currentSong + " - " + btn.Name);
-
                         //add click event handler
-                        btn.Click += playSong_Click;
+                        if ((item as System.Windows.Controls.Button)?.Name == "playSong")
+                            btn.Click += playSong_Click;
+                        else
+                            btn.Click += downloadSong_Click;
                     }
+                    
                 }
 
                 //add new children
@@ -87,6 +92,16 @@ namespace VKMusic {
             media.Source = btn.Tag as Uri;
 
             media.Play();
+        }
+
+        private void downloadSong_Click(object sender, System.Windows.RoutedEventArgs e) {
+            //get Button that was clicked
+            var btn = sender as System.Windows.Controls.Button;
+
+            using (WebClient web = new WebClient()) {
+                web.DownloadFile((btn.Tag as Uri).AbsoluteUri, "1.mp3");
+            }
+            //Download code
         }
     }
 }

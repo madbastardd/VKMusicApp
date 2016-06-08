@@ -28,7 +28,7 @@
                             <ColumnDefinition Width="10*" />
                         </Grid.ColumnDefinitions>
 
-                        <Button Name="playSong" Grid.Column="0" Width="30" Click="playSong_Click" >
+                        <Button Name="playSong" Grid.Column="0" Width="30" >
                             <Button.Template>
                                 <ControlTemplate>
                                     <Border CornerRadius="15" Background="White">
@@ -38,11 +38,11 @@
                             </Button.Template>
                         </Button>
 
-                        <Button Grid.Column="1" Width="30" >
+                        <Button Name="downloadSong" Grid.Column="1" Width="30" >
                             <Button.Template>
                                 <ControlTemplate>
                                     <Border CornerRadius="15" Background="White">
-                                        <Image Source="stop.png" Stretch="Fill" />
+                                        <Image Source="download.png" Stretch="Fill" />
                                     </Border>
                                 </ControlTemplate>
                             </Button.Template>
@@ -60,7 +60,7 @@
                     <ColumnDefinition Width="2*" />
                 </Grid.ColumnDefinitions>
                 
-                <Button Name="loadMore" Grid.Column="1" Margin="0 5 0 5" Click="Button_Click">
+                <Button Name="loadMore" Grid.Column="1" Margin="0 5 0 5" Click="loadMore_Click">
                     <Button.Template>
                         <ControlTemplate>
                             <Border CornerRadius="15" Background="#BF000000">
