@@ -92,7 +92,10 @@
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
-                
+
+                <Grid Name="downloadProgressGrid" Grid.ColumnSpan="4" Background="White" Visibility="Hidden">
+                    <ProgressBar Name="downloadProgress" Minimum="0" Maximum="100" Value="0" />
+                </Grid>
             </Grid>
             
         </Grid>
