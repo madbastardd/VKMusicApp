@@ -98,10 +98,11 @@ namespace VKMusic {
             //get Button that was clicked
             var btn = sender as System.Windows.Controls.Button;
 
+            //Download file
             using (WebClient web = new WebClient()) {
                 web.DownloadFile((btn.Tag as Uri).AbsoluteUri, "1.mp3");
             }
-            //Download code
+            
         }
     }
 }
