@@ -8,9 +8,18 @@ using System.Threading.Tasks;
 namespace VKMusic.Tests {
     [Microsoft.VisualStudio.TestTools.UnitTesting.TestClass]
     public class TestClass {
+        private TestContext testContextInstance;
+        public TestContext TestContext {
+            get {
+                return testContextInstance;
+            }
+            set {
+                testContextInstance = value;
+            }
+        }
         [TestMethod]
-        public void MyTestMethod() {
-
+         public void MyTestMethod() {
+            
         }
     }
 }

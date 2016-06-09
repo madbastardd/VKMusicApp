@@ -67,14 +67,17 @@ namespace VKMusic {
                         //set another button name
                         btn.Name += currentSong;
 
-                        //link download URL with button
-                        btn.Tag = audio.Url;
-
-                        //add click event handler
-                        if ((item as System.Windows.Controls.Button)?.Name == "playSong")
+                        //add click event handler and URL or all Audio
+                        if ((item as System.Windows.Controls.Button)?.Name == "playSong") {
                             btn.Click += playSong_Click;
-                        else
+                            //link download URL with button
+                            btn.Tag = audio.Url;
+                        }
+                        else {
                             btn.Click += downloadSong_Click;
+                            //link audio with button
+                            btn.Tag = audio;
+                        }
                     }
                     
                 }
@@ -111,9 +114,12 @@ namespace VKMusic {
                 //thread to download file async
                 Thread thread = new Thread(() => {
                     //make visible progress bar
-                    downloadProgressGrid.Dispatcher.Invoke(() => {
-                        downloadProgressGrid.Visibility = System.Windows.Visibility.Visible;
+                    downloadProgress.Dispatcher.Invoke(() => {
+                        downloadProgress.Visibility = System.Windows.Visibility.Visible;
                     });
+
+                    //hide button load more
+                    loadMore.Dispatcher.Invoke(() => loadMore.Visibility = System.Windows.Visibility.Hidden);
 
                     //method to change download progress
                     client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(
@@ -125,6 +131,7 @@ namespace VKMusic {
                             //get part that was downloaded
                             double percentage = bytesIn / totalBytes * 100;
 
+                            //set this value on progress bar
                             downloadProgress.Dispatcher.Invoke(() => downloadProgress.Value = percentage);
                         });
 
@@ -132,13 +139,28 @@ namespace VKMusic {
                     client.DownloadFileCompleted += new AsyncCompletedEventHandler(
                         (object objSender, AsyncCompletedEventArgs ev) => {
                             //hide progress bar
-                            downloadProgressGrid.Dispatcher.Invoke(() => {
-                                downloadProgressGrid.Visibility = System.Windows.Visibility.Hidden;
-                            });
-                    });
+                            downloadProgress.Dispatcher.Invoke(() => {
+                                downloadProgress.Visibility = System.Windows.Visibility.Hidden;
 
+                                //reset value
+                                downloadProgress.Value = 0;
+                            });
+                            //show button load more
+                            loadMore.Dispatcher.Invoke(() => loadMore.Visibility = System.Windows.Visibility.Visible);
+                        });
+
+                    VkNet.Model.Attachments.Audio currentAudio = null;
+                    UInt32 num = 0;
+                    //get number of song and current audio file
+                    btn.Dispatcher.Invoke(() => {
+                        currentAudio = btn.Tag as VkNet.Model.Attachments.Audio;
+                        num = UInt32.Parse(btn.Name.Replace("downloadSong", string.Empty));
+                    });
+                    //get path to MyMusic folder
+                    var path = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic) + "\\";
                     //start download async
-                    btn.Dispatcher.Invoke(() => client.DownloadFileAsync(btn.Tag as Uri, "1.mp3"));
+                    btn.Dispatcher.Invoke(() => client.DownloadFileAsync(currentAudio.Url,
+                        path + (currentAudio.Artist??"Artist " + num) + " - " + (currentAudio.Title??"Title " + num) + ".mp3"));
                 });
 
                 //start download
