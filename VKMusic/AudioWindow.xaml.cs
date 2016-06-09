@@ -8,6 +8,7 @@ using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Xml;
 using VkNet.Model;
+using VkNet.Model.Attachments;
 
 namespace VKMusic {
     /// <summary>
@@ -68,12 +69,12 @@ namespace VKMusic {
                         btn.Name += currentSong;
 
                         //add click event handler and URL or all Audio
-                        if ((item as System.Windows.Controls.Button)?.Name == "playSong") {
+                        if (btn.Name.StartsWith("playSong")) {
+                            //link event
                             btn.Click += playSong_Click;
-                            //link download URL with button
-                            btn.Tag = audio.Url;
                         }
                         else {
+                            //link event
                             btn.Click += downloadSong_Click;
                             //link audio with button
                             btn.Tag = audio;
@@ -97,9 +98,14 @@ namespace VKMusic {
                 //if clicked playGlobalSong
             }
             else {
-                //get song from tag (URL)
-                media.Source = btn.Tag as Uri;
-
+                //get num of song
+                var num = UInt32.Parse(btn.Name.Replace("playSong", string.Empty));
+                //get current audio
+                var playedSong = this.FindChild<System.Windows.Controls.Button>("downloadSong" + num).Tag as Audio;
+                //get song from URL
+                media.Source = playedSong.Url;
+                //set current song name
+                currentSongField.Text = playedSong.Artist + " - " + playedSong.Title;
                 //play it
                 media.Play();
             }
@@ -149,11 +155,11 @@ namespace VKMusic {
                             loadMore.Dispatcher.Invoke(() => loadMore.Visibility = System.Windows.Visibility.Visible);
                         });
 
-                    VkNet.Model.Attachments.Audio currentAudio = null;
+                    Audio currentAudio = null;
                     UInt32 num = 0;
                     //get number of song and current audio file
                     btn.Dispatcher.Invoke(() => {
-                        currentAudio = btn.Tag as VkNet.Model.Attachments.Audio;
+                        currentAudio = btn.Tag as Audio;
                         num = UInt32.Parse(btn.Name.Replace("downloadSong", string.Empty));
                     });
                     //get path to MyMusic folder
