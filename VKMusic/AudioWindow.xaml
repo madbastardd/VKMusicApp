@@ -83,8 +83,6 @@
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="10*" />
                 </Grid.ColumnDefinitions>
-                
-                <MediaElement Name="media" LoadedBehavior="Manual" UnloadedBehavior="Manual" Visibility="Hidden" />
 
                 <Button Name="playGlobalSong" Grid.Column="0" Width="30" Height="30" Click="playSong_Click" >
                     <Button.Template>
@@ -96,18 +94,27 @@
                     </Button.Template>
                 </Button>
 
-                <Button Name="stopGlobalSong" Grid.Column="1" Width="30" Height="30" >
+                <Button Name="previousRemote" Grid.Column="1" Width="30" Height="30" >
                     <Button.Template>
                         <ControlTemplate>
                             <Border CornerRadius="15" Background="White">
-                                <Image Source="stop.png" Stretch="Fill" />
+                                <Image Source="prev.png" Stretch="Fill" />
                             </Border>
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
 
-                <TextBlock Name="currentSongField" Grid.Column="3" TextAlignment="Center" VerticalAlignment="Center" 
-                           Foreground="White" />
+                <Button Name="forwardRemote" Grid.Column="2" Width="30" Height="30" >
+                    <Button.Template>
+                        <ControlTemplate>
+                            <Border CornerRadius="15" Background="White">
+                                <Image Source="next.png" Stretch="Fill" />
+                            </Border>
+                        </ControlTemplate>
+                    </Button.Template>
+                </Button>
+
+                <Slider Name="remoteSong" Grid.Column="3" VerticalAlignment="Center" Margin="5" />
             </Grid>
             
         </Grid>

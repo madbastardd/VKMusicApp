@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Net;
 using System.Threading;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Xml;
@@ -18,6 +19,7 @@ namespace VKMusic {
         VKConnector                 connector  { get; set; }
         uint?                       currentSong = 1;
         Grid                        copyBasic;
+        MediaElement                media;
         public AudioWindow(VKConnector connector) {
             //init UI elements
             InitializeComponent();
@@ -35,7 +37,7 @@ namespace VKMusic {
             mainPanel.Children.Remove(basic);
         }
 
-        private void loadMore_Click(object sender, System.Windows.RoutedEventArgs e) {
+        private void loadMore_Click(object sender, RoutedEventArgs e) {
             User user;
 
 #pragma warning disable CS0618 // Type or member is obsolete
@@ -90,10 +92,20 @@ namespace VKMusic {
             }
         }
 
-        private void playSong_Click(object sender, System.Windows.RoutedEventArgs e) {
+        private void playSong_Click(object sender, RoutedEventArgs e) {
             //get Button that was clicked
             var btn = sender as System.Windows.Controls.Button;
-
+            if (media == null) {
+                //create new media element
+                media = new MediaElement();
+                //set his loaded and unloaded behaviour
+                media.LoadedBehavior = MediaState.Manual;
+                media.UnloadedBehavior = MediaState.Manual;
+                //set it unvisible
+                media.Visibility = Visibility.Hidden;
+            }
+            //stop previouse media
+            media.Stop();
             if (sender == playGlobalSong) {
                 //if clicked playGlobalSong
             }
@@ -104,14 +116,26 @@ namespace VKMusic {
                 var playedSong = this.FindChild<System.Windows.Controls.Button>("downloadSong" + num).Tag as Audio;
                 //get song from URL
                 media.Source = playedSong.Url;
-                //set current song name
-                currentSongField.Text = playedSong.Artist + " - " + playedSong.Title;
                 //play it
                 media.Play();
+
+                //foreach (var item in btn.GetParentObject().GetChildObjects()) {
+                //    if ((item as TextBlock)?.Text == playedSong.Artist + " - " + playedSong.Title) {
+                //        //get song name
+                //        var songName = item as TextBlock;
+                //        //make foreground blue
+                //        songName.Foreground = Brushes.Blue;
+                //        //when song stops - return color to white
+                //        media.MediaEnded += (object objSender, RoutedEventArgs ev) => {
+                //            songName.Foreground = Brushes.White;
+                //        };
+                //    }
+                //}
+
             }
         }
 
-        private void downloadSong_Click(object sender, System.Windows.RoutedEventArgs e) {
+        private void downloadSong_Click(object sender, RoutedEventArgs e) {
             //get Button that was clicked
             var btn = sender as System.Windows.Controls.Button;
 
@@ -121,11 +145,11 @@ namespace VKMusic {
                 Thread thread = new Thread(() => {
                     //make visible progress bar
                     downloadProgress.Dispatcher.Invoke(() => {
-                        downloadProgress.Visibility = System.Windows.Visibility.Visible;
+                        downloadProgress.Visibility = Visibility.Visible;
                     });
 
                     //hide button load more
-                    loadMore.Dispatcher.Invoke(() => loadMore.Visibility = System.Windows.Visibility.Hidden);
+                    loadMore.Dispatcher.Invoke(() => loadMore.Visibility = Visibility.Hidden);
 
                     //method to change download progress
                     client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(
@@ -146,13 +170,13 @@ namespace VKMusic {
                         (object objSender, AsyncCompletedEventArgs ev) => {
                             //hide progress bar
                             downloadProgress.Dispatcher.Invoke(() => {
-                                downloadProgress.Visibility = System.Windows.Visibility.Hidden;
+                                downloadProgress.Visibility = Visibility.Hidden;
 
                                 //reset value
                                 downloadProgress.Value = 0;
                             });
                             //show button load more
-                            loadMore.Dispatcher.Invoke(() => loadMore.Visibility = System.Windows.Visibility.Visible);
+                            loadMore.Dispatcher.Invoke(() => loadMore.Visibility = Visibility.Visible);
                         });
 
                     Audio currentAudio = null;
