@@ -7,6 +7,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Markup;
+using System.Windows.Threading;
 using System.Xml;
 using VkNet.Model;
 using VkNet.Model.Attachments;
@@ -16,10 +17,11 @@ namespace VKMusic {
     /// Interaction logic for AudioWindow.xaml
     /// </summary>
     public partial class AudioWindow : MetroWindow {
-        VKConnector                 connector  { get; set; }
-        uint?                       currentSong = 1;
-        Grid                        copyBasic;
-        MediaElement                media;
+        VKConnector connector { get; set; }
+        uint? currentSong = 1;
+        Grid copyBasic;
+        MediaElement media;
+        DispatcherTimer playTimer;
         public AudioWindow(VKConnector connector) {
             //init UI elements
             InitializeComponent();
@@ -59,7 +61,7 @@ namespace VKMusic {
                 foreach (var item in newGrid.GetChildObjects()) {
                     if ((item as TextBlock)?.Text == "Song")
                         //songName field
-                        (item as TextBlock).Text = audio.Artist + " - " 
+                        (item as TextBlock).Text = audio.Artist + " - "
                             + audio.Title;
                     else if ((item as System.Windows.Controls.Button)?.Name == "playSong" ||
                         (item as System.Windows.Controls.Button)?.Name == "downloadSong") {
@@ -82,7 +84,7 @@ namespace VKMusic {
                             btn.Tag = audio;
                         }
                     }
-                    
+
                 }
 
                 //add new children
@@ -119,19 +121,35 @@ namespace VKMusic {
                 //play it
                 media.Play();
 
-                //foreach (var item in btn.GetParentObject().GetChildObjects()) {
-                //    if ((item as TextBlock)?.Text == playedSong.Artist + " - " + playedSong.Title) {
-                //        //get song name
-                //        var songName = item as TextBlock;
-                //        //make foreground blue
-                //        songName.Foreground = Brushes.Blue;
-                //        //when song stops - return color to white
-                //        media.MediaEnded += (object objSender, RoutedEventArgs ev) => {
-                //            songName.Foreground = Brushes.White;
-                //        };
-                //    }
-                //}
+                //action that happends when media stops
+                media.MediaEnded += new RoutedEventHandler((object objSender, RoutedEventArgs ev) => {
 
+                });
+                //stop timer
+                playTimer?.Stop();
+                //create new timer for update slider value while music plays
+                playTimer = new DispatcherTimer();
+                //set timer tick event
+                playTimer.Tick += (object o, EventArgs ev) => {
+                    //set maximum slider value equals to duration of audio
+                    //set text timer to current position of audio
+                    if (media.NaturalDuration.HasTimeSpan) {
+                        remoteSong.Maximum = media.NaturalDuration.TimeSpan.TotalSeconds;
+                        songDuration.Text = media.Position.ToString(@"mm\:ss") + @"\" + 
+                            media.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
+                    }
+                    //set its current position
+                    remoteSong.Value = media.Position.TotalSeconds;
+                };
+                //change interval to 500 miliseconds
+                playTimer.Interval = new TimeSpan(0, 0, 0, 0, 500);
+                //start timer
+                playTimer.Start();
+
+
+                //change play button to stop button
+                //var imagePlay = playGlobalSong.FindChild<Image>("playGlobalSongImage") as Image;
+                //imagePlay.Source."stop.png";
             }
         }
 
@@ -171,7 +189,6 @@ namespace VKMusic {
                             //hide progress bar
                             downloadProgress.Dispatcher.Invoke(() => {
                                 downloadProgress.Visibility = Visibility.Hidden;
-
                                 //reset value
                                 downloadProgress.Value = 0;
                             });
@@ -190,13 +207,26 @@ namespace VKMusic {
                     var path = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic) + "\\";
                     //start download async
                     btn.Dispatcher.Invoke(() => client.DownloadFileAsync(currentAudio.Url,
-                        path + (currentAudio.Artist??"Artist " + num) + " - " + (currentAudio.Title??"Title " + num) + ".mp3"));
+                        path + (currentAudio.Artist ?? "Artist " + num) + " - " + (currentAudio.Title ?? "Title " + num) + ".mp3"));
                 });
 
                 //start download
                 thread.Start();
             }
-            
+
+        }
+
+        private void remoteSong_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+            //rewind or fast forward song
+            media.Position = new TimeSpan((int)remoteSong.Value / 3600, (int)remoteSong.Value % 3600 / 60,
+                (int)remoteSong.Value % 3600 % 60);
+        }
+
+        private void remoteSong_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e) {
+            //set audio timer text
+            songDuration.Text = String.Format("{0:00}:{1:00}", (int)remoteSong.Value / 60,
+                (int)remoteSong.Value % 60) + @"\" +
+                media.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
         }
     }
 }
