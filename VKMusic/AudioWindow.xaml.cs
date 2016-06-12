@@ -24,7 +24,6 @@ namespace VKMusic {
         MediaElement media; //media element to play music
         DispatcherTimer playTimer;  //timer that handles slider
         bool unactive = false;  //true if slider is unactive
-        Thread downloadThread;  //download thread
         public AudioWindow(VKConnector connector) {
             //init UI elements
             InitializeComponent();
@@ -199,9 +198,8 @@ namespace VKMusic {
 
             //Download file
             using (WebClient client = new WebClient()) {
-                downloadThread?.Join();
                 //thread to download file async
-                downloadThread = new Thread(() => {
+                Thread downloadThread = new Thread(() => {
                     //make visible progress bar
                     downloadProgress.Dispatcher.Invoke(() => {
                         downloadProgress.Visibility = Visibility.Visible;
@@ -213,28 +211,28 @@ namespace VKMusic {
                     //method to change download progress
                     client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(
                         (object objSender, DownloadProgressChangedEventArgs ev) => {
-                            //get downloaded bytes
-                            double bytesIn = double.Parse(ev.BytesReceived.ToString());
-                            //get total bytes
-                            double totalBytes = double.Parse(ev.TotalBytesToReceive.ToString());
-                            //get part that was downloaded
-                            double percentage = bytesIn / totalBytes * 100;
+                                //get downloaded bytes
+                                double bytesIn = double.Parse(ev.BytesReceived.ToString());
+                                //get total bytes
+                                double totalBytes = double.Parse(ev.TotalBytesToReceive.ToString());
+                                //get part that was downloaded
+                                double percentage = bytesIn / totalBytes * 100;
 
-                            //set this value on progress bar
-                            downloadProgress.Dispatcher.Invoke(() => downloadProgress.Value = percentage);
+                                //set this value on progress bar
+                                downloadProgress.Dispatcher.Invoke(() => downloadProgress.Value = percentage);
                         });
 
                     //method would call when file would be downloaded
                     client.DownloadFileCompleted += new AsyncCompletedEventHandler(
                         (object objSender, AsyncCompletedEventArgs ev) => {
-                            //hide progress bar
-                            downloadProgress.Dispatcher.Invoke(() => {
+                                //hide progress bar
+                                downloadProgress.Dispatcher.Invoke(() => {
                                 downloadProgress.Visibility = Visibility.Hidden;
-                                //reset value
-                                downloadProgress.Value = 0;
+                                    //reset value
+                                    downloadProgress.Value = 0;
                             });
-                            //show button load more
-                            loadMore.Dispatcher.Invoke(() => loadMore.Visibility = Visibility.Visible);
+                                //show button load more
+                                loadMore.Dispatcher.Invoke(() => loadMore.Visibility = Visibility.Visible);
                         });
 
                     Audio currentAudio = null;
@@ -247,8 +245,8 @@ namespace VKMusic {
                     //get path to MyMusic folder
                     var path = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic) + "\\";
                     //start download async
-                    btn.Dispatcher.Invoke(() => client.DownloadFileAsync(currentAudio.Url,
-                        path + (currentAudio.Artist ?? "Artist " + num) + " - " + (currentAudio.Title ?? "Title " + num) + ".mp3"));
+                    client.DownloadFileAsync(currentAudio.Url,
+                        path + (currentAudio.Artist ?? "Artist " + num) + " - " + (currentAudio.Title ?? "Title " + num) + ".mp3");
                 });
 
                 //start download
