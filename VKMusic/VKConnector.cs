@@ -10,7 +10,7 @@ namespace VKMusic {
 
         string username;       //username
         string password;       //password
-        public string KeyValue { get; set; }           //key from SMS
+        public string keyValue { get; set; }           //key from SMS
 
         public VkApi VK {
             //read only property that returns VKApi
@@ -45,7 +45,7 @@ namespace VKMusic {
                 Login = username,
                 Password = password,
                 Settings = Settings.Audio,
-                TwoFactorAuthorization = () => KeyValue
+                TwoFactorAuthorization = () => keyValue
             };
 
             return Auth(authParams);
@@ -75,7 +75,7 @@ namespace VKMusic {
         private void HideInfo() {
             //delete username and password after
             //success auth
-            username = password = null;
+            username = password = keyValue = null;
         }
     }
 }

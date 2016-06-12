@@ -132,7 +132,7 @@ namespace VKMusic {
 
         private void successAuth_Click(object sender, RoutedEventArgs e) {
             //second auth button submit click
-            connector.KeyValue = keyAuth.Text;
+            connector.keyValue = keyAuth.Text;
 
             //hide wall image
             wallIMG.Visibility = Visibility.Hidden;
