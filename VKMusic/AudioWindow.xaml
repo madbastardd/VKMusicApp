@@ -6,7 +6,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:VKMusic"
         mc:Ignorable="d"
-        Title="AudioWindow" Height="500" Width="800">
+        Title="" Height="500" Width="800">
     <Grid>
         <Grid Background="#FF31A3D4">
             <Image Source="wall2.png" />
