@@ -5,12 +5,12 @@ using VkNet.Exception;
 
 namespace VKMusic {
     public class VKConnector {
-        static ulong                    ID = 5485784;   //application ID
-        VkApi                           api;            //VKApi
+        static ulong ID = 5485784;   //application ID
+        VkApi api;            //VKApi
 
-        string                          username;       //username
-        string                          password;       //password
-        public string                   KeyValue  { get; set; }           //key from SMS
+        string username;       //username
+        string password;       //password
+        public string KeyValue { get; set; }           //key from SMS
 
         public VkApi VK {
             //read only property that returns VKApi

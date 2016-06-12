@@ -93,8 +93,8 @@
 
                 <TextBlock Grid.Row="0" TextAlignment="Center" VerticalAlignment="Center" Text="Enter SMS key" 
                            Foreground="White" />
-                
-                <Border Grid.Row="1" BorderThickness="1" Grid.Column="1" CornerRadius="10" BorderBrush="Black" 
+
+                <Border Name="keyAuthBorder" Grid.Row="1" BorderThickness="1" Grid.Column="1" CornerRadius="10" BorderBrush="Black" 
                         Background="#BFFFFFFF" Margin="5 0 5 10">
                     <TextBox Name="keyAuth" TextAlignment="Center" BorderThickness="0" Padding="5"
                              KeyDown="keyAuth_KeyDown">

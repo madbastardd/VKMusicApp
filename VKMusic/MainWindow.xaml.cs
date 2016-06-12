@@ -5,6 +5,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Threading;
+using System.Windows.Input;
 
 namespace VKMusic {
     /// <summary>
@@ -43,6 +44,17 @@ namespace VKMusic {
             password.LostFocus += (object sender, RoutedEventArgs e) => {
                 //Password lost focus - change background only
                 passwordBorder.Background = new SolidColorBrush(Color.FromArgb(191, 255, 255, 255));
+            };
+
+            keyAuth.GotFocus += (object sender, RoutedEventArgs e) => {
+                //key auth field got focus - delete all text
+                //and change background
+                keyAuth.Text = "";
+                keyAuthBorder.Background = Brushes.White;
+            };
+            keyAuth.LostFocus += (object sender, RoutedEventArgs e) => {
+                //key auth lost focus - change background color 
+                keyAuthBorder.Background = new SolidColorBrush(Color.FromArgb(191, 255, 255, 255));
             };
 
             username.Foreground = new SolidColorBrush(Color.FromRgb(55, 55, 55));
@@ -191,14 +203,19 @@ namespace VKMusic {
                     : Visibility.Hidden;
         }
 
-        private void username_KeyDown(object sender, System.Windows.Input.KeyEventArgs e) {
-            if (e.Key == System.Windows.Input.Key.Enter && logInBtn.Visibility == Visibility.Visible)
+        private void username_KeyDown(object sender, KeyEventArgs e) {
+            //if key is enter - call button click
+            if (e.Key == Key.Enter && logInBtn.Visibility == Visibility.Visible)
                 submit_Click(logInBtn, null);
         }
 
-        private void keyAuth_KeyDown(object sender, System.Windows.Input.KeyEventArgs e) {
-            if (e.Key == System.Windows.Input.Key.Enter && !string.IsNullOrEmpty(keyAuth.Text))
+        private void keyAuth_KeyDown(object sender, KeyEventArgs e) {
+            //if key is enter - call button success click
+            if (e.Key == Key.Enter && !string.IsNullOrEmpty(keyAuth.Text))
                 successAuth_Click(submit, null);
+            //if key is not num - clear that key
+            if (!(e.Key >= Key.D0 && e.Key <= Key.D9 || e.Key >= Key.NumPad0 && e.Key <= Key.NumPad9))
+                e.Handled = true;
         }
     }
 }

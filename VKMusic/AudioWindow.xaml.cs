@@ -9,6 +9,7 @@ using System.Windows.Controls;
 using System.Windows.Markup;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
+using System.Windows.Input;
 using System.Xml;
 using VkNet.Model;
 using VkNet.Model.Attachments;
@@ -19,11 +20,11 @@ namespace VKMusic {
     /// </summary>
     public partial class AudioWindow : MetroWindow {
         VKConnector connector { get; set; } //VKApi connector
-        uint? currentSong = 1;  //current song that showed in window
-        Grid copyBasic; //copy of basic audio grid
+        uint? currentLoadedSong = 1;  //current song that showed in window
+        Grid copyBasicAudioGrid; //copy of basic audio grid
         MediaElement media; //media element to play music
         DispatcherTimer playTimer;  //timer that handles slider
-        bool unactive = false;  //true if slider is unactive
+        bool isSliderUnactive = false;  //true if slider is unactive
         public AudioWindow(VKConnector connector) {
             //init UI elements
             InitializeComponent();
@@ -34,7 +35,7 @@ namespace VKMusic {
             playGlobalSong.Tag = false;
 
             //save basic audio grid
-            copyBasic = basic;
+            copyBasicAudioGrid = basic;
 
             //assign VKconnector
             this.connector = connector;
@@ -50,13 +51,13 @@ namespace VKMusic {
             User user;
 
 #pragma warning disable CS0618 // Type or member is obsolete
-            var audios = connector.VK.Audio.Get((long)connector.VK.UserId, out user, null, null, 21, currentSong);
+            var audios = connector.VK.Audio.Get((long)connector.VK.UserId, out user, null, null, 21, currentLoadedSong);
 #pragma warning restore CS0618 // Type or member is obsolete
 
             foreach (var audio in audios) {
                 //AddChild songs
                 //copy XAML of basic grid
-                string gridXaml = XamlWriter.Save(copyBasic);
+                string gridXaml = XamlWriter.Save(copyBasicAudioGrid);
 
                 //convert it to string, then to XML
                 //and create grid
@@ -77,7 +78,7 @@ namespace VKMusic {
                         var btn = item as System.Windows.Controls.Button;
 
                         //set another button name
-                        btn.Name += currentSong;
+                        btn.Name += currentLoadedSong;
 
                         //add click event handler and URL or all Audio
                         if (btn.Name.StartsWith("playSong")) {
@@ -97,7 +98,7 @@ namespace VKMusic {
                 //add new children
                 mainPanel.Children.Add(newGrid);
                 //increment currentSong
-                ++currentSong;
+                ++currentLoadedSong;
             }
         }
 
@@ -151,6 +152,8 @@ namespace VKMusic {
                 media.Source = playedSong.Url;
                 //play it
                 media.Play();
+                //set media tag - current number of song played
+                media.Tag = num;
 
                 //action that happends when media stops
                 media.MediaEnded += new RoutedEventHandler((object objSender, RoutedEventArgs ev) => {
@@ -158,27 +161,29 @@ namespace VKMusic {
                     //call next song play
                     playSong_Click(this.FindChild<System.Windows.Controls.Button>("playSong" + currentSongPlayed), null);
                 });
-                //stop timer
-                playTimer?.Stop();
-                //create new timer for update slider value while music plays
-                playTimer = new DispatcherTimer();
-                //set timer tick event
-                playTimer.Tick += (object o, EventArgs ev) => {
-                    //set maximum slider value equals to duration of audio
-                    //set text timer to current position of audio
-                    if (media.NaturalDuration.HasTimeSpan) {
-                        remoteSong.Maximum = media.NaturalDuration.TimeSpan.TotalSeconds;
-                        songDuration.Text = media.Position.ToString(@"mm\:ss") + @"\" + 
-                            media.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
-                    }
-                    //set its current position
-                    if (!unactive)
-                        remoteSong.Value = media.Position.TotalSeconds;
-                };
-                //change interval to 250 miliseconds
-                playTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
-                //start timer
-                playTimer.Start();
+                //create play music timer
+                if (playTimer == null) {
+                    //create new timer for update slider value while music plays
+                    playTimer = new DispatcherTimer();
+                    //set timer tick event
+                    playTimer.Tick += (object o, EventArgs ev) => {
+                        //set maximum slider value equals to duration of audio
+                        //set text timer to current position of audio
+                        if (media.NaturalDuration.HasTimeSpan) {
+                            remoteSong.Maximum = media.NaturalDuration.TimeSpan.TotalSeconds;
+                            songDuration.Text = media.Position.ToString(@"mm\:ss") + @"\" +
+                                media.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
+                        } else
+                            songDuration.Text = "00:00";
+                        //set its current position
+                        if (!isSliderUnactive)
+                            remoteSong.Value = media?.Position.TotalSeconds??0.0;
+                    };
+                    //change interval to 250 miliseconds
+                    playTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
+                    //start timer
+                    playTimer.Start();
+                }
 
                 //change play button to stop button
                 var imagePlay = playGlobalSong.FindChild<Image>("playGlobalSongImage") as Image;
@@ -255,25 +260,42 @@ namespace VKMusic {
 
         }
 
-        private void remoteSong_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
+        private void remoteSong_PreviewMouseUp(object sender, MouseButtonEventArgs e) {
             //set active slider
-            unactive = false;
+            isSliderUnactive = false;
             //rewind or fast forward song
-            if (media != null)
+            if (media != null) {
                 media.Position = new TimeSpan((int)remoteSong.Value / 3600, (int)remoteSong.Value % 3600 / 60,
                     (int)remoteSong.Value % 3600 % 60);
+            }
         }
 
-        private void remoteSong_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e) {
+        private void remoteSong_PreviewMouseMove(object sender, MouseEventArgs e) {
             //set audio timer text
-            if (e.LeftButton == System.Windows.Input.MouseButtonState.Pressed && 
+            if (e.LeftButton == MouseButtonState.Pressed && 
                 media != null && media.NaturalDuration.HasTimeSpan) {
                 //set unactive slider
-                unactive = true;
+                isSliderUnactive = true;
                 //change timer text
                 songDuration.Text = String.Format("{0:00}:{1:00}", (int)remoteSong.Value / 60,
                     (int)remoteSong.Value % 60) + @"\" +
                     media.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
+            }
+        }
+
+        private void Remote_Click(object sender, RoutedEventArgs e) {
+            //handle remote song
+            if (media != null && media.Position != new TimeSpan()) {
+                //if was clicked previous remote button
+                if (sender == previousRemote) {
+                    //sub audio position
+                    media.Position = media.Position.Subtract(new TimeSpan(0, 0, 1));
+                }
+                //if was clicked forward remote button
+                else if (sender == forwardRemote) {
+                    //add audio position
+                    media.Position = media.Position.Add(new TimeSpan(0, 0, 1));
+                }
             }
         }
     }
