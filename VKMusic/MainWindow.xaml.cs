@@ -190,5 +190,15 @@ namespace VKMusic {
                     ? Visibility.Visible
                     : Visibility.Hidden;
         }
+
+        private void username_KeyDown(object sender, System.Windows.Input.KeyEventArgs e) {
+            if (e.Key == System.Windows.Input.Key.Enter && logInBtn.Visibility == Visibility.Visible)
+                submit_Click(logInBtn, null);
+        }
+
+        private void keyAuth_KeyDown(object sender, System.Windows.Input.KeyEventArgs e) {
+            if (e.Key == System.Windows.Input.Key.Enter && !string.IsNullOrEmpty(keyAuth.Text))
+                successAuth_Click(submit, null);
+        }
     }
 }
