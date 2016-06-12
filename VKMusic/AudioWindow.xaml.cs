@@ -17,11 +17,11 @@ namespace VKMusic {
     /// Interaction logic for AudioWindow.xaml
     /// </summary>
     public partial class AudioWindow : MetroWindow {
-        VKConnector connector { get; set; }
-        uint? currentSong = 1;
-        Grid copyBasic;
-        MediaElement media;
-        DispatcherTimer playTimer;
+        VKConnector connector { get; set; } //VKApi connector
+        uint? currentSong = 1;  //current song that showed in window
+        Grid copyBasic; //copy of basic audio grid
+        MediaElement media; //media element to play music
+        DispatcherTimer playTimer;  //timer that handles slider
         public AudioWindow(VKConnector connector) {
             //init UI elements
             InitializeComponent();
@@ -123,7 +123,9 @@ namespace VKMusic {
 
                 //action that happends when media stops
                 media.MediaEnded += new RoutedEventHandler((object objSender, RoutedEventArgs ev) => {
-
+                    uint currentSongPlayed = num + 1;   //get number of next song to play
+                    //call next song play
+                    playSong_Click(this.FindChild<System.Windows.Controls.Button>("playSong" + currentSongPlayed), null);
                 });
                 //stop timer
                 playTimer?.Stop();
@@ -218,15 +220,17 @@ namespace VKMusic {
 
         private void remoteSong_PreviewMouseUp(object sender, System.Windows.Input.MouseButtonEventArgs e) {
             //rewind or fast forward song
-            media.Position = new TimeSpan((int)remoteSong.Value / 3600, (int)remoteSong.Value % 3600 / 60,
-                (int)remoteSong.Value % 3600 % 60);
+            if (media != null)
+                media.Position = new TimeSpan((int)remoteSong.Value / 3600, (int)remoteSong.Value % 3600 / 60,
+                    (int)remoteSong.Value % 3600 % 60);
         }
 
         private void remoteSong_PreviewMouseMove(object sender, System.Windows.Input.MouseEventArgs e) {
             //set audio timer text
-            songDuration.Text = String.Format("{0:00}:{1:00}", (int)remoteSong.Value / 60,
-                (int)remoteSong.Value % 60) + @"\" +
-                media.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
+            if (media != null && media.NaturalDuration.HasTimeSpan)
+                songDuration.Text = String.Format("{0:00}:{1:00}", (int)remoteSong.Value / 60,
+                    (int)remoteSong.Value % 60) + @"\" +
+                    media.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
         }
     }
 }
