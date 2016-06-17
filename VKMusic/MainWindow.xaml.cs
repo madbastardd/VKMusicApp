@@ -89,6 +89,9 @@ namespace VKMusic {
                     //view another auth window
                     mainAuth.Dispatcher.Invoke(() => mainAuth.Visibility = Visibility.Hidden);
                     secondAuth.Dispatcher.Invoke(() => secondAuth.Visibility = Visibility.Visible);
+
+                    //focus on enter key field
+                    keyAuth.Dispatcher.Invoke(() => keyAuth.Focus());
                 }
                 else {
                     //if all connected, then stop animation

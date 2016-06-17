@@ -20,7 +20,7 @@ namespace VKMusic {
     /// </summary>
     public partial class AudioWindow : MetroWindow {
         VKConnector connector { get; set; } //VKApi connector
-        uint? currentLoadedSong = 1;  //current song that showed in window
+        uint? currentLoadedSong = 0;  //current song that showed in window
         Grid copyBasicAudioGrid; //copy of basic audio grid
         MediaElement media; //media element to play music
         DispatcherTimer playTimer;  //timer that handles slider
