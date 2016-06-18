@@ -13,6 +13,7 @@ using System.Windows.Input;
 using System.Xml;
 using VkNet.Model;
 using VkNet.Model.Attachments;
+using System.Windows.Media;
 
 namespace VKMusic {
     /// <summary>
@@ -45,6 +46,15 @@ namespace VKMusic {
 
             //remove basic audio grid
             mainPanel.Children.Remove(basic);
+
+            search.GotFocus += (object sender, RoutedEventArgs e) => {
+                //Search got focus - change background
+                searchBorder.Background = Brushes.White;
+            };
+            search.LostFocus += (object sender, RoutedEventArgs e) => {
+                //Search lost focus - change background
+                searchBorder.Background = new SolidColorBrush(Color.FromArgb(191, 255, 255, 255));
+            };
         }
 
         private void loadMore_Click(object sender, RoutedEventArgs e) {
@@ -295,6 +305,25 @@ namespace VKMusic {
                 else if (sender == forwardRemote) {
                     //add audio position
                     media.Position = media.Position.Add(new TimeSpan(0, 0, 1));
+                }
+            }
+        }
+
+        private void search_TextChanged(object sender, TextChangedEventArgs e) {
+            //filter results
+            //foreach for all grids in stackPanel
+            foreach (var grid in mainPanel.GetChildObjects()) {
+                //foreach for all elements in music grid
+                foreach (var gridElement in grid.GetChildObjects()) {
+                    //if song name contains word in search
+                    if ((gridElement as TextBlock)?.Text.ToLower().Contains(search.Text.ToLower()) == true) {
+                        //show it
+                        (grid as Grid).Visibility = Visibility.Visible;
+                    }
+                    else if ((gridElement as TextBlock)?.Text.ToLower().Contains(search.Text.ToLower()) == false) {
+                        //or hide it
+                        (grid as Grid).Visibility = Visibility.Collapsed;
+                    }
                 }
             }
         }

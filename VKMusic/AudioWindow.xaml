@@ -14,12 +14,27 @@
 
         <Grid Background="#80000000">
             <Grid.RowDefinitions>
+                <RowDefinition Height="50" />
                 <RowDefinition Height="12*" />
                 <RowDefinition Height="30" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
-            
-            <ScrollViewer Grid.Row="0" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
+
+            <Border Name="searchBorder" BorderThickness="1" Grid.Row="0" CornerRadius="10" BorderBrush="Black"
+                        Background="#BFFFFFFF" Margin="5">
+                <DockPanel>
+                    <Image Source="search.png" />
+                    <TextBox Name="search" BorderThickness="0" Padding="5"
+                             VerticalAlignment="Center"
+                             TextChanged="search_TextChanged">
+                        <TextBox.Background>
+                            <SolidColorBrush />
+                        </TextBox.Background>
+                    </TextBox>
+                </DockPanel>
+            </Border>
+
+            <ScrollViewer Grid.Row="1" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto">
                 <StackPanel Name="mainPanel" VerticalAlignment="Top" Margin="10">
                     <Grid Name="basic" Height="30" Margin="0 0 0 10">
                         <Grid.ColumnDefinitions>
@@ -53,7 +68,7 @@
                 </StackPanel>
             </ScrollViewer>
 
-            <Grid Grid.Row="1">
+            <Grid Grid.Row="2">
                 <Button Name="loadMore" Margin="5" Click="loadMore_Click">
                     <Button.Template>
                         <ControlTemplate>
@@ -71,7 +86,7 @@
                              Foreground="Green" />
             </Grid>
 
-            <Grid Grid.Row="2" Visibility="Visible">
+            <Grid Grid.Row="3" Visibility="Visible" Margin="1">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*" />
                     <ColumnDefinition Width="*" />
@@ -80,33 +95,33 @@
                     <ColumnDefinition Width="3*" />
                 </Grid.ColumnDefinitions>
 
-                <Button Name="playGlobalSong" Grid.Column="0" Width="30" Height="30" Click="playSong_Click" >
+                <Button Name="playGlobalSong" Grid.Column="0" Width="30" Click="playSong_Click" >
                     <Button.Template>
                         <ControlTemplate>
                             <Border CornerRadius="15" Background="White">
-                                <Image Name="playGlobalSongImage" Source="play.png" Stretch="Fill" />
+                                <Image Name="playGlobalSongImage" Source="play.png"  />
                             </Border>
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
 
-                <Button Name="previousRemote" Grid.Column="1" Width="30" Height="30" 
+                <Button Name="previousRemote" Grid.Column="1" Width="30"
                         Click="Remote_Click">
                     <Button.Template>
                         <ControlTemplate>
                             <Border CornerRadius="15" Background="White">
-                                <Image Source="prev.png" Stretch="Fill" />
+                                <Image Source="prev.png" />
                             </Border>
                         </ControlTemplate>
                     </Button.Template>
                 </Button>
 
-                <Button Name="forwardRemote" Grid.Column="2" Width="30" Height="30" 
+                <Button Name="forwardRemote" Grid.Column="2" Width="30"
                         Click="Remote_Click">
                     <Button.Template>
                         <ControlTemplate>
                             <Border CornerRadius="15" Background="White">
-                                <Image Source="next.png" Stretch="Fill" />
+                                <Image Source="next.png" />
                             </Border>
                         </ControlTemplate>
                     </Button.Template>

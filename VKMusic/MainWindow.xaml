@@ -32,7 +32,8 @@
                 </Grid.ColumnDefinitions>
                 <Border Name="usernameBorder" BorderThickness="1" Grid.Column="1" CornerRadius="10" BorderBrush="Black"
                         Background="#BFFFFFFF">
-                    <TextBox Name="username" BorderThickness="0" Text="Username" Padding="5"
+                    <TextBox Name="username" BorderThickness="0" Text="Username" VerticalAlignment="Center"
+                             Padding="5 0"
                              TextChanged="username_textChanged"
                              KeyDown="username_KeyDown">
                         <TextBox.Background>
@@ -50,7 +51,8 @@
                 </Grid.ColumnDefinitions>
                 <Border Name="passwordBorder" BorderThickness="1" Grid.Column="1" CornerRadius="10" BorderBrush="Black" 
                         Background="#BFFFFFFF">
-                    <PasswordBox Name="password" BorderThickness="0" Padding="5" 
+                    <PasswordBox Name="password" BorderThickness="0" VerticalAlignment="Center"
+                                 Padding="5 0"
                                  PasswordChanged="password_PasswordChanged"
                                  KeyDown="username_KeyDown">
                         <PasswordBox.Background>
@@ -96,7 +98,8 @@
 
                 <Border Name="keyAuthBorder" Grid.Row="1" BorderThickness="1" Grid.Column="1" CornerRadius="10" BorderBrush="Black" 
                         Background="#BFFFFFFF" Margin="5 0 5 10">
-                    <TextBox Name="keyAuth" TextAlignment="Center" BorderThickness="0" Padding="5"
+                    <TextBox Name="keyAuth" TextAlignment="Center" BorderThickness="0" VerticalAlignment="Center"
+                             Padding="5 0"
                              KeyDown="keyAuth_KeyDown">
                         <TextBox.Background>
                             <SolidColorBrush />
