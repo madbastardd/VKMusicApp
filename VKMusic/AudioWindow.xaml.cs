@@ -2,6 +2,7 @@
 using System;
 using System.ComponentModel;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Windows;
@@ -129,7 +130,7 @@ namespace VKMusic {
                     btn.Tag = true;
                     //play first song
                     if (media == null)
-                        playSong_Click(this.FindChild<System.Windows.Controls.Button>("playSong1"), null);
+                        playSong_Click(this.FindChild<System.Windows.Controls.Button>("playSong0"), null);
                     //continue play
                     else
                         media.Play();
@@ -314,21 +315,18 @@ namespace VKMusic {
 
         private void search_TextChanged(object sender, TextChangedEventArgs e) {
             //filter results
-            //foreach for all grids in stackPanel
-            foreach (var grid in mainPanel.GetChildObjects()) {
-                //foreach for all elements in music grid
-                foreach (var gridElement in grid.GetChildObjects()) {
-                    //if song name contains word in search
-                    if ((gridElement as TextBlock)?.Text.ToLower().Contains(search.Text.ToLower()) == true) {
-                        //show it
-                        (grid as Grid).Visibility = Visibility.Visible;
-                    }
-                    else if ((gridElement as TextBlock)?.Text.ToLower().Contains(search.Text.ToLower()) == false) {
-                        //or hide it
-                        (grid as Grid).Visibility = Visibility.Collapsed;
-                    }
-                }
-            }
+            //show songs that under filter condition
+            mainPanel.FindChildren<Grid>()
+                .SelectMany(grid => grid.FindChildren<TextBlock>())
+                .Where(textBlock => textBlock.Text.ToLower().Contains(search.Text.ToLower()))
+                .ToList()
+                .ForEach(textBlock => (textBlock.Parent as Grid).Visibility = Visibility.Visible);
+            //hide songs that not under filter condition
+            mainPanel.FindChildren<Grid>()
+                .SelectMany(grid => grid.FindChildren<TextBlock>())
+                .Where(textBlock => !textBlock.Text.ToLower().Contains(search.Text.ToLower()))
+                .ToList()
+                .ForEach(textBlock => (textBlock.Parent as Grid).Visibility = Visibility.Collapsed);
         }
     }
 }
