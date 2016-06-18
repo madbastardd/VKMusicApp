@@ -24,7 +24,7 @@
                         Background="#BFFFFFFF" Margin="5">
                 <DockPanel>
                     <Image Source="search.png" />
-                    <TextBox Name="search" BorderThickness="0" Padding="5"
+                    <TextBox Name="search" BorderThickness="0" Margin="5 0"
                              VerticalAlignment="Center"
                              TextChanged="search_TextChanged">
                         <TextBox.Background>

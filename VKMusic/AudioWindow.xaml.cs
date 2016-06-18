@@ -110,6 +110,9 @@ namespace VKMusic {
                 //increment currentSong
                 ++currentLoadedSong;
             }
+
+            //check for filter
+            search_TextChanged(null, null);
         }
 
         private void playSong_Click(object sender, RoutedEventArgs e) {
