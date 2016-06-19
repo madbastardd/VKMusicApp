@@ -8,11 +8,11 @@
         mc:Ignorable="d"
         Title="" Height="350" Width="525">
     <Grid>
-        <Grid Name="wallIMG" Background="#FF25B7D3">
+        <Grid Name="wallIMG" Background="#FF6898E0">
             <Image Source="wall.png" />
         </Grid>
 
-        <Grid Name="mainAuth" Background="#80000000">
+        <Grid Name="mainAuth" Background="#75000000">
             <Grid.RowDefinitions>
                 <RowDefinition Height="2*" />
                 <RowDefinition Height="50" />
@@ -83,7 +83,7 @@
             </Grid>
         </Grid>
 
-        <Grid Name="secondAuth" Background="#80000000" Visibility="Hidden">
+        <Grid Name="secondAuth" Background="#75000000" Visibility="Hidden">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="2*" />
