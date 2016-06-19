@@ -56,6 +56,52 @@ namespace VKMusic {
                 //Search lost focus - change background
                 searchBorder.Background = new SolidColorBrush(Color.FromArgb(191, 255, 255, 255));
             };
+
+            //variable for closing
+            bool locker;
+
+            //action mouse down delegate for remote song buttons
+            MouseButtonEventHandler actionDown = (object sender, MouseButtonEventArgs e) => {
+                //thread locker make true
+                locker = true;
+                Thread thread = new Thread(() => {
+                    int secondsToAdd = 1;
+                    //while button down - remote song
+                    while (locker) {
+                        //check what button pressed
+                        if (sender == forwardRemote)
+                            //remote forward
+                            media.Dispatcher.Invoke(() => {
+                                media.Position = media.Position.Add(new TimeSpan(0, 0, secondsToAdd));
+                            });
+                        else
+                            //remote back
+                            media.Dispatcher.Invoke(() => {
+                                media.Position = media.Position.Subtract(new TimeSpan(0, 0, secondsToAdd));
+                            });
+                        //stop this thread
+                        Thread.Sleep(new TimeSpan(0, 0, 0, 0, 250));
+                        //make remote longer
+                        secondsToAdd += 1;
+                    }
+                });
+                //start remote thread
+                thread.Start();
+            };
+
+            //action mouse up delegate for remote song buttons
+            MouseButtonEventHandler actionUp = (object sender, MouseButtonEventArgs e) => {
+                //unlock thread
+                locker = false;
+            };
+
+            //add delegates to back remote
+            backRemote.PreviewMouseDown += actionDown;
+            backRemote.PreviewMouseUp += actionUp;
+
+            //and to forward remote
+            forwardRemote.PreviewMouseDown += actionDown;
+            forwardRemote.PreviewMouseUp += actionUp;
         }
 
         private void loadMore_Click(object sender, RoutedEventArgs e) {
@@ -156,7 +202,7 @@ namespace VKMusic {
                     //set it unvisible
                     media.Visibility = Visibility.Hidden;
                 }
-                //stop previouse media
+                //stop previous media
                 media.Stop();
                 //get num of song
                 var num = UInt32.Parse(btn.Name.Replace("playSong", string.Empty));
@@ -184,14 +230,14 @@ namespace VKMusic {
                         //set maximum slider value equals to duration of audio
                         //set text timer to current position of audio
                         if (media.NaturalDuration.HasTimeSpan) {
-                            remoteSong.Maximum = media.NaturalDuration.TimeSpan.TotalSeconds;
+                            remoteSongSlider.Maximum = media.NaturalDuration.TimeSpan.TotalSeconds;
                             songDuration.Text = media.Position.ToString(@"mm\:ss") + @"\" +
                                 media.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
                         } else
                             songDuration.Text = "00:00";
                         //set its current position
                         if (!isSliderUnactive)
-                            remoteSong.Value = media?.Position.TotalSeconds??0.0;
+                            remoteSongSlider.Value = media?.Position.TotalSeconds??0.0;
                     };
                     //change interval to 250 miliseconds
                     playTimer.Interval = new TimeSpan(0, 0, 0, 0, 250);
@@ -279,20 +325,20 @@ namespace VKMusic {
             isSliderUnactive = false;
             //rewind or fast forward song
             if (media != null) {
-                media.Position = new TimeSpan((int)remoteSong.Value / 3600, (int)remoteSong.Value % 3600 / 60,
-                    (int)remoteSong.Value % 3600 % 60);
+                media.Position = new TimeSpan((int)remoteSongSlider.Value / 3600, (int)remoteSongSlider.Value % 3600 / 60,
+                    (int)remoteSongSlider.Value % 3600 % 60);
             }
         }
 
-        private void remoteSong_PreviewMouseMove(object sender, MouseEventArgs e) {
+        private void remoteSongSlider_PreviewMouseMove(object sender, MouseEventArgs e) {
             //set audio timer text
             if (e.LeftButton == MouseButtonState.Pressed && 
                 media != null && media.NaturalDuration.HasTimeSpan) {
                 //set unactive slider
                 isSliderUnactive = true;
                 //change timer text
-                songDuration.Text = String.Format("{0:00}:{1:00}", (int)remoteSong.Value / 60,
-                    (int)remoteSong.Value % 60) + @"\" +
+                songDuration.Text = String.Format("{0:00}:{1:00}", (int)remoteSongSlider.Value / 60,
+                    (int)remoteSongSlider.Value % 60) + @"\" +
                     media.NaturalDuration.TimeSpan.ToString(@"mm\:ss");
             }
         }
@@ -300,8 +346,8 @@ namespace VKMusic {
         private void Remote_Click(object sender, RoutedEventArgs e) {
             //handle remote song
             if (media != null && media.Position != new TimeSpan()) {
-                //if was clicked previous remote button
-                if (sender == previousRemote) {
+                //if was clicked back remote button
+                if (sender == backRemote) {
                     //sub audio position
                     media.Position = media.Position.Subtract(new TimeSpan(0, 0, 1));
                 }
