@@ -22,7 +22,8 @@ namespace VKMusic {
     /// </summary>
     public partial class AudioWindow : MetroWindow {
         VKConnector connector { get; set; } //VKApi connector
-        uint? currentLoadedSong = 0;  //current song that showed in window
+        uint? lastLoadedSong = 0;  //current song that showed in window
+        uint currentSongNumber; //current song that plays
         Grid copyBasicAudioGrid; //copy of basic audio grid
         MediaElement media; //media element to play music
         DispatcherTimer playTimer;  //timer that handles slider
@@ -108,7 +109,7 @@ namespace VKMusic {
             User user;
 
 #pragma warning disable CS0618 // Type or member is obsolete
-            var audios = connector.VK.Audio.Get((long)connector.VK.UserId, out user, null, null, 21, currentLoadedSong);
+            var audios = connector.VK.Audio.Get((long)connector.VK.UserId, out user, null, null, 21, lastLoadedSong);
 #pragma warning restore CS0618 // Type or member is obsolete
 
             foreach (var audio in audios) {
@@ -135,7 +136,7 @@ namespace VKMusic {
                         var btn = item as System.Windows.Controls.Button;
 
                         //set another button name
-                        btn.Name += currentLoadedSong;
+                        btn.Name += lastLoadedSong;
 
                         //add click event handler and URL or all Audio
                         if (btn.Name.StartsWith("playSong")) {
@@ -154,8 +155,8 @@ namespace VKMusic {
 
                 //add new children
                 mainPanel.Children.Add(newGrid);
-                //increment currentSong
-                ++currentLoadedSong;
+                //increment last loaded song
+                ++lastLoadedSong;
             }
 
             //check for filter
@@ -205,21 +206,24 @@ namespace VKMusic {
                 //stop previous media
                 media.Stop();
                 //get num of song
-                var num = UInt32.Parse(btn.Name.Replace("playSong", string.Empty));
+                currentSongNumber = UInt32.Parse(btn.Name.Replace("playSong", string.Empty));
                 //get current audio
-                var playedSong = this.FindChild<System.Windows.Controls.Button>("downloadSong" + num).Tag as Audio;
+                var currentAudio = this.FindChild<System.Windows.Controls.Button>("downloadSong" + currentSongNumber).Tag as Audio;
                 //get song from URL
-                media.Source = playedSong.Url;
+                media.Source = currentAudio.Url;
                 //play it
-                media.Play();
-                //set media tag - current number of song played
-                media.Tag = num;
+                try {
+                    //try play current song
+                    media.Play();
+                } catch (InvalidOperationException) {
+                    //if cant - play next
+                    playSong_Click(this.FindChild<System.Windows.Controls.Button>("playSong" + ++currentSongNumber), e);
+                }
 
                 //action that happends when media stops
                 media.MediaEnded += new RoutedEventHandler((object objSender, RoutedEventArgs ev) => {
-                    uint currentSongPlayed = num + 1;   //get number of next song to play
                     //call next song play
-                    playSong_Click(this.FindChild<System.Windows.Controls.Button>("playSong" + currentSongPlayed), null);
+                    playSong_Click(this.FindChild<System.Windows.Controls.Button>("playSong" + ++currentSongNumber), null);
                 });
                 //create play music timer
                 if (playTimer == null) {
@@ -253,7 +257,7 @@ namespace VKMusic {
                 playGlobalSong.Tag = true;
 
                 //change window title to title of music played
-                Title = playedSong.Artist + " - " + playedSong.Title;
+                Title = currentAudio.Artist + " - " + currentAudio.Title;
             }
         }
 
