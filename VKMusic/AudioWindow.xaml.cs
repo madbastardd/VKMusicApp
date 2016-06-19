@@ -202,6 +202,8 @@ namespace VKMusic {
                     media.UnloadedBehavior = MediaState.Manual;
                     //set it unvisible
                     media.Visibility = Visibility.Hidden;
+                    //set music volume
+                    media.Volume = volume.Value;
                 }
                 //stop previous media
                 media.Stop();
@@ -377,6 +379,12 @@ namespace VKMusic {
                 .Where(textBlock => !textBlock.Text.ToLower().Contains(search.Text.ToLower()))
                 .ToList()
                 .ForEach(textBlock => (textBlock.Parent as Grid).Visibility = Visibility.Collapsed);
+        }
+
+        private void volume_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e) {
+            //change music volume
+            if (media != null)
+                media.Volume = volume.Value;
         }
     }
 }
